@@ -7,6 +7,7 @@
 
 import CoreData
 import Foundation
+import OSLog
 
 // MARK: - Storage
 final class Storage: ObservableObject {
@@ -14,6 +15,7 @@ final class Storage: ObservableObject {
 	let container: NSPersistentContainer
 	
 	private let _name: String = "SayStore"
+	private let _logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "SayStore", category: "Storage")
 
 	init(inMemory: Bool = false) {
 		container = NSPersistentContainer(name: _name)
@@ -53,10 +55,17 @@ final class Storage: ObservableObject {
 	private func _loadPersistentStoreAggressively() {
 		container.loadPersistentStores { description, error in
 			if error != nil {
+				self._logger.error("Core Data store load failed, recreating store: \(String(describing: error), privacy: .public)")
 				self._destroyStore(at: description.url)
-				self.container.loadPersistentStores { _, error in
-					if let error {
-						fatalError("Core Data unrecoverable: \(error)")
+				self.container.loadPersistentStores { _, retryError in
+					if let retryError {
+						self._logger.error("Core Data store reload failed, falling back to in-memory store: \(String(describing: retryError), privacy: .public)")
+						self.container.persistentStoreDescriptions.forEach { $0.type = NSInMemoryStoreType }
+						self.container.loadPersistentStores { _, fallbackError in
+							if let fallbackError {
+								self._logger.critical("Core Data in-memory fallback failed: \(String(describing: fallbackError), privacy: .public)")
+							}
+						}
 					}
 				}
 			}

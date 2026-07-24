@@ -187,7 +187,6 @@
 				330F68FF2DC03DF400D8C35D /* XCLocalSwiftPackageReference "NimbleKit" */,
 				3346F8372DC6C68300C7D508 /* XCRemoteSwiftPackageReference "Nuke" */,
 				33693A062DC8BF5B00730215 /* XCLocalSwiftPackageReference "AltSourceKit" */,
-				339776052DC9D05C00642FFB /* XCRemoteSwiftPackageReference "LicensePlist" */,
 				3349E7652DEFB46F00E317ED /* XCLocalSwiftPackageReference "IDeviceKitten" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -223,7 +222,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Will copy acknowledgements\"\n\nACKNOWLEDGEMENTS_DIR=${BUILT_PRODUCTS_DIR}/${CONTENTS_FOLDER_PATH}/com.mono0926.LicensePlist.Output\nDESTINATION_PATH=${BUILT_PRODUCTS_DIR}/${CONTENTS_FOLDER_PATH}/Settings.bundle/\n\ncp -r \"${ACKNOWLEDGEMENTS_DIR}\"/dev.alexbadi.SayStore \"${DESTINATION_PATH}\"\ncp -r \"${ACKNOWLEDGEMENTS_DIR}\"/dev.alexbadi.SayStore.plist \"${DESTINATION_PATH}\"\nrm -rf \"${ACKNOWLEDGEMENTS_DIR}\"\n";
+			shellScript = "echo \"Will copy acknowledgements\"\n\nACKNOWLEDGEMENTS_DIR=${BUILT_PRODUCTS_DIR}/${CONTENTS_FOLDER_PATH}/com.mono0926.LicensePlist.Output\nDESTINATION_PATH=${BUILT_PRODUCTS_DIR}/${CONTENTS_FOLDER_PATH}/Settings.bundle/\n\nif [ -d \"${ACKNOWLEDGEMENTS_DIR}\" ]; then\n\tcp -r \"${ACKNOWLEDGEMENTS_DIR}\"/dev.alexbadi.SayStore \"${DESTINATION_PATH}\"\n\tcp -r \"${ACKNOWLEDGEMENTS_DIR}\"/dev.alexbadi.SayStore.plist \"${DESTINATION_PATH}\"\n\trm -rf \"${ACKNOWLEDGEMENTS_DIR}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -238,10 +237,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		339776072DC9D0F800642FFB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 339776062DC9D0F800642FFB /* LicensePlistBuildTool */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -613,11 +608,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3371F6F52DA9EBA500281AC6 /* XCRemoteSwiftPackageReference "Zip" */;
 			productName = Zip;
-		};
-		339776062DC9D0F800642FFB /* LicensePlistBuildTool */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 339776052DC9D05C00642FFB /* XCRemoteSwiftPackageReference "LicensePlist" */;
-			productName = "plugin:LicensePlistBuildTool";
 		};
 		33CF13382DB5ACFB0021D4C5 /* SWCompression */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -19,7 +19,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.novadev.SayStore.ipa</string>
+				<string>dev.alexbadi.SayStore.ipa</string>
 			</array>
 		</dict>
 		<dict>
@@ -33,7 +33,7 @@
 			<string>Alternate</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.novadev.SayStore.tipa</string>
+				<string>dev.alexbadi.SayStore.tipa</string>
 			</array>
 		</dict>
 	</array>
@@ -45,7 +45,7 @@
 			<key>CFBundleURLIconFile</key>
 			<string>SayStore_extension</string>
 			<key>CFBundleURLName</key>
-			<string>com.novadev.SayStore</string>
+			<string>dev.alexbadi.SayStore</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>SayStore</string>
@@ -81,7 +81,7 @@
 				<string>IPA</string>
 			</dict>
 			<key>UTTypeIdentifier</key>
-			<string>com.novadev.SayStore.ipa</string>
+			<string>dev.alexbadi.SayStore.ipa</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -113,7 +113,7 @@
 				<string>TIPA</string>
 			</dict>
 			<key>UTTypeIdentifier</key>
-			<string>com.novadev.SayStore.tipa</string>
+			<string>dev.alexbadi.SayStore.tipa</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

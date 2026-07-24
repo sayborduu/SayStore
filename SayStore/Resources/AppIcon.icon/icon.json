@@ -1,19 +1,113 @@
 {
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+  },
   "groups" : [
     {
+      "blur-material" : null,
+      "hidden-specializations" : [
+        {
+          "appearance" : "light",
+          "value" : true
+        },
+        {
+          "appearance" : "dark",
+          "value" : true
+        },
+        {
+          "appearance" : "tinted",
+          "value" : false
+        }
+      ],
       "layers" : [
         {
-          "glass" : false,
-          "image-name" : "SayStore.png",
-          "name" : "SayStore"
+          "glass" : true,
+          "image-name" : "1024-tinted.png",
+          "name" : "1024-tinted"
         }
-      ]
+      ],
+      "name" : "Mono",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.11
+      }
+    },
+    {
+      "blur-material" : null,
+      "hidden-specializations" : [
+        {
+          "appearance" : "light",
+          "value" : true
+        },
+        {
+          "appearance" : "dark",
+          "value" : false
+        },
+        {
+          "appearance" : "tinted",
+          "value" : true
+        }
+      ],
+      "layers" : [
+        {
+          "image-name" : "1024-dark 2.png",
+          "name" : "1024-dark 2"
+        }
+      ],
+      "name" : "Dark",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "blur-material" : 0.5,
+      "layers" : [
+        {
+          "glass" : true,
+          "hidden-specializations" : [
+            {
+              "value" : false
+            },
+            {
+              "appearance" : "light",
+              "value" : false
+            },
+            {
+              "appearance" : "dark",
+              "value" : true
+            }
+          ],
+          "image-name" : "1024.png",
+          "name" : "1024"
+        }
+      ],
+      "lighting" : "individual",
+      "name" : "Default",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
     }
   ],
   "supported-platforms" : {
-    "circles" : [
-      "watchOS"
-    ],
-    "squares" : "shared"
+    "squares" : [
+      "iOS"
+    ]
   }
 }

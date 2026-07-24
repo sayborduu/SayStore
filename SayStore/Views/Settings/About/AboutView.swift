@@ -12,6 +12,7 @@ import NimbleViews
 extension AboutView {
 	enum CreditsGroup: String, Codable, Hashable {
 		case SayStore
+		case NexStore
 		case feather
 	}
 
@@ -86,12 +87,16 @@ extension AboutView {
 struct AboutView: View {
 	@State private var _credits: [CreditsModel] = []
 	@State private var _redditAvatarURLs: [String: URL] = [:]
+	@State private var _NexStoreDevelopersExpanded = false
 	@State private var _isFeatherDevelopersExpanded = false
 	@State var isLoading = true
 
 	private let _fixedCredits: [CreditsModel] = [
-		.init(name: "NovaDev404", desc: "Developer", github: "NovaDev404", group: .SayStore),
-		.init(name: "Beckett R", desc: "SayStore Icon", reddit: "GoblinsStoleMyMac", group: .SayStore),
+		.init(name: "Alex Badi", desc: "Developer", github: "sayborduu", group: .SayStore),
+
+		.init(name: "NovaDev404", desc: "Developer", github: "NovaDev404", group: .NexStore),
+		.init(name: "Beckett R", desc: "SayStore Icon", reddit: "GoblinsStoleMyMac", group: .NexStore),
+
 		.init(name: "Samara", desc: "Developer", github: "claration", group: .feather),
 		.init(name: "Nyasami", desc: "Contributor", github: "Nyasami", group: .feather),
 		.init(name: "Adrian Castro", desc: "Contributor", github: "castdrian", group: .feather),
@@ -128,6 +133,17 @@ struct AboutView: View {
 					ForEach(_SayStoreDevelopers) { credit in
 						_credit(credit)
 					}
+
+					if !_NexStoreDevelopers.isEmpty {
+						DisclosureGroup(isExpanded: $_NexStoreDevelopersExpanded) {
+							ForEach(_NexStoreDevelopers) { credit in
+								_credit(credit)
+							}
+						} label: {
+							_nexStoreDevelopersHeader
+						}
+						.transition(.slide)
+					}
 					
 					if !_featherDevelopers.isEmpty {
 						DisclosureGroup(isExpanded: $_isFeatherDevelopersExpanded) {
@@ -162,6 +178,10 @@ struct AboutView: View {
 	
 	private var _SayStoreDevelopers: [CreditsModel] {
 		_credits.filter { $0.group == .SayStore }
+	}
+
+	private var _NexStoreDevelopers: [CreditsModel] {
+		_credits.filter { $0.group == .NexStore }
 	}
 	
 	private var _featherDevelopers: [CreditsModel] {
@@ -272,6 +292,14 @@ extension AboutView {
 			Text("Feather Developers")
 			Spacer()
 			_overlappingContributorIcons(_featherDevelopers)
+		}
+	}
+
+	private var _nexStoreDevelopersHeader: some View {
+		HStack(spacing: 10) {
+			Text("NexStore Developers")
+			Spacer()
+			_overlappingContributorIcons(_NexStoreDevelopers)
 		}
 	}
 	

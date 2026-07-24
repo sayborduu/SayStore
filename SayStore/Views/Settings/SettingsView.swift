@@ -34,7 +34,7 @@ struct SettingsView: View {
 	}
 
     
-    private let _githubUrl = "https://github.com/NovaDev404/SayStore"
+    private let _githubUrl = "https://github.com/sayborduu/SayStore"
     
     // MARK: Body
     var body: some View {

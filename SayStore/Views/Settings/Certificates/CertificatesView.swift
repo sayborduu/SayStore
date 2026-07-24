@@ -88,12 +88,12 @@ struct CertificatesView: View {
 extension CertificatesView {
 	@ViewBuilder
 	private func _addOptions() -> some View {
-		Button(.localized("Official (NovaCerts)")) {
-			_addSheet = .official
-		}
-
-		Button(.localized("Certificate Files")) {
+		Button(.localized("Import from Files"), systemImage: "folder") {
 			_addSheet = .certificateFiles
+		}
+		
+		Button(.localized("Import from NovaCerts"), systemImage: "globe") {
+			_addSheet = .official
 		}
 	}
 

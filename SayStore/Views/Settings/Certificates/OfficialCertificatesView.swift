@@ -19,6 +19,8 @@ struct OfficialCertificatesView: View {
 	@State private var _isImporting = false
 	@State private var _isLoading = false
 	@State private var _importingCertificateID: String?
+	@State private var _searchText = ""
+	@State private var _selectedFilter: CertificateFilter = .all
 
 	// MARK: Body
 	var body: some View {
@@ -32,10 +34,28 @@ struct OfficialCertificatesView: View {
 					_catalogList
 				}
 			}
+			.searchable(text: $_searchText, placement: .platform())
 			.animation(.default, value: _catalogSections.map(\.id))
 			.animation(.default, value: _isLoading)
 			.toolbar {
 				NBToolbarButton(role: .cancel)
+
+				Menu {
+					ForEach(CertificateFilter.allCases, id: \.self) { filter in
+						Button {
+							_selectedFilter = filter
+						} label: {
+							HStack {
+								Text(filter.title)
+								if filter == _selectedFilter {
+									Image(systemName: "checkmark")
+								}
+							}
+						}
+					}
+				} label: {
+					Image(systemName: "line.3.horizontal.decrease.circle")
+				}
 
 				if _isImporting {
 					ToolbarItem(placement: .confirmationAction) {
@@ -56,7 +76,7 @@ extension OfficialCertificatesView {
 	private var _catalogList: some View {
 		List {
 			Section {
-				ForEach(_catalogSections) { section in
+				ForEach(_filteredCatalogSections) { section in
 					if section.isGroup {
 						_groupRow(section)
 					} else if let certificate = section.certificates.first {
@@ -64,13 +84,31 @@ extension OfficialCertificatesView {
 					}
 				}
 			} footer: {
-				Text(.localized("Certificates are fetched from the NovaCerts README and imported directly into SayStore."))
+				Text(.localized("Certificates are fetched from the Sideloading.net (aka NovaCerts) API and imported directly into SayStore."))
 			}
 		}
 		.listStyle(.insetGrouped)
 		.disabled(_isImporting)
 		.refreshable {
 			await _loadCatalog(force: true)
+		}
+		.overlay {
+			if _hasLoaded, _errorMessage == nil, !_isLoading, _filteredCatalogSections.isEmpty {
+				VStack(spacing: 10) {
+					Image(systemName: "slider.horizontal.3")
+						.font(.largeTitle)
+						.foregroundStyle(.secondary)
+
+					Text(.localized("No Certificates"))
+						.font(.headline)
+
+					Text(.localized("Try a different search or filter."))
+						.font(.footnote)
+						.foregroundStyle(.secondary)
+				}
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
+				.padding()
+			}
 		}
 	}
 
@@ -199,11 +237,105 @@ extension OfficialCertificatesView {
 			return .green
 		case .revoked:
 			return .red
+		case .expired:
+			return .orange
 		case .unknown:
 			return .secondary
 		}
 	}
 
+}
+
+// MARK: - Filter
+extension OfficialCertificatesView {
+	private var _filteredCatalogSections: [NovaCerts.CatalogSection] {
+		_catalogSections.compactMap { section in
+			section.filtered(searchText: _searchText, filter: _selectedFilter)
+		}
+	}
+
+	private enum CertificateFilter: String, CaseIterable, Hashable {
+		case all
+		case signed
+		case revoked
+		case expired
+		case unknown
+
+		var title: String {
+			switch self {
+			case .all:
+				.localized("All")
+			case .signed:
+				.localized("Signed")
+			case .revoked:
+				.localized("Revoked")
+			case .expired:
+				.localized("Expired")
+			case .unknown:
+				.localized("Unknown")
+			}
+		}
+
+		func matches(_ status: NovaCerts.Status) -> Bool {
+			switch self {
+			case .all:
+				return true
+			case .signed:
+				return status == .signed
+			case .revoked:
+				return status == .revoked
+			case .expired:
+				return status == .expired
+			case .unknown:
+				return status == .unknown
+			}
+		}
+	}
+}
+
+// MARK: - Filtering Helpers
+private extension NovaCerts.CatalogItem {
+	func matches(searchText: String, filter: OfficialCertificatesView.CertificateFilter) -> Bool {
+		guard filter.matches(status) else { return false }
+		guard !searchText.isEmpty else { return true }
+
+		let searchableValues = [
+			name,
+			subtitle,
+			status.title,
+			rawStatusText,
+			validFrom,
+			validTo,
+			folderName
+		]
+
+		return searchableValues.contains { $0.localizedCaseInsensitiveContains(searchText) }
+	}
+}
+
+private extension NovaCerts.CatalogSection {
+	func filtered(searchText: String, filter: OfficialCertificatesView.CertificateFilter) -> NovaCerts.CatalogSection? {
+		let matchingCertificates = certificates.filter { $0.matches(searchText: searchText, filter: filter) }
+		guard !matchingCertificates.isEmpty else { return nil }
+
+		if matchingCertificates.count == 1, let certificate = matchingCertificates.first {
+			return NovaCerts.CatalogSection(
+				id: id,
+				title: certificate.name,
+				subtitle: certificate.subtitle,
+				status: certificate.status,
+				certificates: matchingCertificates
+			)
+		}
+
+		return NovaCerts.CatalogSection(
+			id: id,
+			title: title,
+			subtitle: subtitle,
+			status: NovaCerts.Status.aggregate(matchingCertificates.map(\.status)),
+			certificates: matchingCertificates
+		)
+	}
 }
 
 // MARK: - Actions

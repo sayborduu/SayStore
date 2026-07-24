@@ -95,10 +95,16 @@ enum NovaCerts {
 	enum Status: String, Hashable {
 		case signed
 		case revoked
+		case expired
 		case unknown
 
-		init(markdownValue: String) {
+		init(markdownValue: String, validTo: String) {
 			let normalizedValue = markdownValue.lowercased()
+			if let validToDate = Self._validToDate(from: validTo), validToDate < Date() {
+				self = .expired
+				return
+			}
+
 			if normalizedValue.contains("signed") {
 				self = .signed
 			} else if normalizedValue.contains("revoked") {
@@ -114,12 +120,18 @@ enum NovaCerts {
 				String.localized("Signed")
 			case .revoked:
 				String.localized("Revoked")
+			case .expired:
+				String.localized("EXPIRED")
 			case .unknown:
 				String.localized("Unknown")
 			}
 		}
 
 		static func aggregate(_ statuses: [Status]) -> Status {
+			if statuses.contains(.expired) {
+				return .expired
+			}
+
 			if statuses.contains(.signed) {
 				return .signed
 			}
@@ -129,6 +141,16 @@ enum NovaCerts {
 			}
 
 			return .revoked
+		}
+
+		private static func _validToDate(from string: String) -> Date? {
+			guard !string.isEmpty else { return nil }
+
+			let formatter = DateFormatter()
+			formatter.locale = Locale(identifier: "en_US_POSIX")
+			formatter.timeZone = TimeZone(secondsFromGMT: 0)
+			formatter.dateFormat = "MMM d HH:mm:ss yyyy zzz"
+			return formatter.date(from: string)
 		}
 	}
 
@@ -174,7 +196,7 @@ extension NovaCerts {
 				name: item.name,
 				folderName: item.folderName,
 				certificateType: item.folderName == item.name ? "" : item.folderName,
-				status: Status(markdownValue: item.status),
+				status: Status(markdownValue: item.status, validTo: item.validTo),
 				rawStatusText: item.status,
 				validFrom: item.validFrom,
 				validTo: item.validTo,

@@ -105,6 +105,22 @@ final class CertificateStatusManager: ObservableObject {
 		return appleStatusSnapshots[uuid]
 	}
 
+	func appleStatusValue(for cert: CertificatePair) -> CertificateStatusValue {
+		appleStatus(for: cert)?.status ?? .unknown
+	}
+
+	func appleStatusTitle(for cert: CertificatePair) -> String {
+		appleStatus(for: cert)?.displayTitle ?? CertificateStatusValue.unknown.title
+	}
+
+	func deviceStatusValue(for cert: CertificatePair) -> CertificateStatusValue {
+		CertificateStatusValue.deviceStatus(for: cert)
+	}
+
+	func deviceStatusTitle(for cert: CertificatePair) -> String {
+		CertificateStatusValue.deviceStatus(for: cert).title
+	}
+
 	func effectiveStatus(for cert: CertificatePair) -> CertificateStatusValue {
 		guard let snapshot = appleStatus(for: cert), snapshot.status != .unknown else {
 			return CertificateStatusValue.deviceStatus(for: cert)

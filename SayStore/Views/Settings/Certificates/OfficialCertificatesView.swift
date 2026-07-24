@@ -254,7 +254,7 @@ extension OfficialCertificatesView {
 		}
 	}
 
-	private enum CertificateFilter: String, CaseIterable, Hashable {
+	fileprivate enum CertificateFilter: String, CaseIterable, Hashable {
 		case all
 		case signed
 		case revoked

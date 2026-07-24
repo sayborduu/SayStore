@@ -70,14 +70,24 @@ extension CertificatesCellView {
 
 	private func _buildPills(from cert: CertificatePair) -> [NBPillItem] {
 		var pills: [NBPillItem] = []
-		let status = statusManager.effectiveStatus(for: cert)
-		let title = statusManager.effectiveStatusTitle(for: cert)
+		let appleStatus = statusManager.appleStatusValue(for: cert)
+		let appleTitle = statusManager.appleStatusTitle(for: cert)
+		let deviceStatus = statusManager.deviceStatusValue(for: cert)
+		let deviceTitle = statusManager.deviceStatusTitle(for: cert)
 
 		pills.append(
 			NBPillItem(
-				title: title,
-				icon: status.icon,
-				color: status.color
+				title: "\(String.localized("Apple Status")): \(appleTitle)",
+				icon: appleStatus.icon,
+				color: appleStatus.color
+			)
+		)
+
+		pills.append(
+			NBPillItem(
+				title: "\(String.localized("Device Status")): \(deviceTitle)",
+				icon: deviceStatus.icon,
+				color: deviceStatus.color
 			)
 		)
 

@@ -54,12 +54,20 @@ struct CertificatesInfoView: View {
 
 // MARK: - Extension: View
 extension CertificatesInfoView {
-	private var _status: CertificateStatusValue {
-		statusManager.effectiveStatus(for: cert)
+	private var _appleStatus: CertificateStatusValue {
+		statusManager.appleStatusValue(for: cert)
 	}
 
-	private var _statusTitle: String {
-		statusManager.effectiveStatusTitle(for: cert)
+	private var _appleStatusTitle: String {
+		statusManager.appleStatusTitle(for: cert)
+	}
+
+	private var _deviceStatus: CertificateStatusValue {
+		statusManager.deviceStatusValue(for: cert)
+	}
+
+	private var _deviceStatusTitle: String {
+		statusManager.deviceStatusTitle(for: cert)
 	}
 
 	@ViewBuilder
@@ -75,9 +83,15 @@ extension CertificatesInfoView {
 				.foregroundStyle(data.ExpirationDate.expirationInfo().color)
 
 			_statusInfo(
-				.localized("Status"),
-				status: _status,
-				description: _statusTitle
+				.localized("Apple Status"),
+				status: _appleStatus,
+				description: _appleStatusTitle
+			)
+
+			_statusInfo(
+				.localized("Device Status"),
+				status: _deviceStatus,
+				description: _deviceStatusTitle
 			)
 			
 			if let ppq = data.PPQCheck {

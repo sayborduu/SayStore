@@ -32,7 +32,7 @@ struct ConfigurationView: View {
                 ) {
                     Label(.localized("Identifiers"), systemImage: "person.text.rectangle")
                 }
-            }footer: {
+            } footer: {
                 Text(.localized("This allows you to set rules for automatically replacing the Bundle ID/Display Name when signing an app."))
             }
             SigningOptionsView(options: $_optionsManager.options)

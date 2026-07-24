@@ -54,21 +54,23 @@ struct OfficialCertificatesView: View {
 	private var _toolbarContent: some ToolbarContent {
 		NBToolbarButton(role: .cancel)
 
-		Menu {
-			ForEach(CertificateFilter.allCases, id: \.self) { filter in
-				Button {
-					_selectedFilter = filter
-				} label: {
-					HStack {
-						Text(filter.title)
-						if filter == _selectedFilter {
-							Image(systemName: "checkmark")
+		ToolbarItem(placement: .primaryAction) {
+			Menu {
+				ForEach(CertificateFilter.allCases, id: \.self) { filter in
+					Button {
+						_selectedFilter = filter
+					} label: {
+						HStack {
+							Text(filter.title)
+							if filter == _selectedFilter {
+								Image(systemName: "checkmark")
+							}
 						}
 					}
 				}
+			} label: {
+				Image(systemName: "line.3.horizontal.decrease.circle")
 			}
-		} label: {
-			Image(systemName: "line.3.horizontal.decrease.circle")
 		}
 
 		if _isImporting {
@@ -77,6 +79,7 @@ struct OfficialCertificatesView: View {
 			}
 		}
 	}
+
 }
 
 // MARK: - Content

@@ -16,7 +16,7 @@ struct MoreView: View {
 			Section {
 				HStack {
 					Toggle(isOn: $useNovaDNSDynamic) {
-						Text("Use NovaDNS Dynamic")
+						Text("Use NexDNS Dynamic")
 					}
 					Spacer()
 					Button(action: {
@@ -30,6 +30,8 @@ struct MoreView: View {
 					}
 					.buttonStyle(.plain)
 				}
+			} footer: {
+				Text(.localized("Using NexDNS Dynamic helps prevent installed apps revocation by dynamically changing the blocking behavior.*\n\nThis feature is made by NovaDev404."))
 			}
 		}
 	}

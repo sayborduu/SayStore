@@ -1,5 +1,8 @@
 {
     "xcodeIntegration.projectPath": "/Users/alexbadi/Desktop/Projects/SayStore",
     "xcodeIntegration.xcodeProjectPath": "/Users/alexbadi/Desktop/Projects/SayStore/SayStore.xcodeproj",
-    "sweetpad.build.xcodeWorkspacePath": "SayStore.xcworkspace"
+    "sweetpad.build.xcodeWorkspacePath": "SayStore.xcworkspace",
+    "github-actions.workflows.pinned.workflows": [
+        ".github/workflows/release.yml"
+    ]
 }

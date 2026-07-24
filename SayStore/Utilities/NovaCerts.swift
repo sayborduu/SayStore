@@ -22,20 +22,6 @@ enum NovaCerts {
 		let validTo: String
 		fileprivate let order: Int
 
-		var subtitle: String {
-			var components: [String] = []
-			if !certificateType.isEmpty {
-				components.append(certificateType)
-			}
-			/*if !validFrom.isEmpty {
-				components.append(String.localized("Valid From: %@", arguments: validFrom))
-			}*/
-			if !validTo.isEmpty {
-				components.append(String.localized("Valid To: %@", arguments: validTo))
-			}
-			return components.joined(separator: " • ")
-		}
-
 		var groupingBaseName: String? {
 			guard let range = name.range(of: #"\s+\([^()]+\)$"#, options: .regularExpression) else {
 				return nil
@@ -59,6 +45,49 @@ enum NovaCerts {
 
 		private func _assetURL(fileName: String) -> URL {
 			URL(string: "https://sideloading.net/api/certificates/download/\(certId)/\(fileName)")!
+		}
+
+		private func remainingDays() -> Int? {
+			guard !validTo.isEmpty else { return nil }
+
+			let formatter = DateFormatter()
+			formatter.locale = Locale(identifier: "en_US_POSIX")
+			formatter.timeZone = TimeZone(secondsFromGMT: 0)
+			formatter.dateFormat = "MMM d HH:mm:ss yyyy zzz"
+
+			guard let validToDate = formatter.date(from: validTo) else { return nil }
+
+			let currentDate = Date()
+			let calendar = Calendar.current
+			let components = calendar.dateComponents([.day], from: currentDate, to: validToDate)
+
+			return components.day
+		}
+
+		var subtitle: String {
+			var components: [String] = []
+			if !certificateType.isEmpty {
+				components.append(certificateType)
+			}
+			/*if !validFrom.isEmpty {
+				components.append(String.localized("Valid From: %@", arguments: validFrom))
+			}*/
+			if !validTo.isEmpty {
+				components.append(String.localized("Valid To: %@", arguments: validTo))
+			}
+
+			if let remainingDays = remainingDays() {
+				if remainingDays < 0 {
+					components.append(String.localized("Expired"))
+				} else if remainingDays == 0 {
+					components.append(String.localized("Expires Today"))
+				} else if remainingDays == 1 {
+					components.append(String.localized("Expires Tomorrow"))
+				} else {
+					components.append(String.localized("Expires in %lld days", arguments: Int64(remainingDays)))
+				}
+			}
+			return components.joined(separator: " • ")
 		}
 	}
 

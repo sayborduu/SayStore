@@ -8,17 +8,13 @@
 import Foundation
 
 enum NovaCerts {
-	static let readmeURL = URL(string: "https://raw.githubusercontent.com/NovaDev404/NovaCerts/refs/heads/main/README.md")!
-	private static let _rawBaseURL = "https://github.com/NovaDev404/NovaCerts/raw/refs/heads/main"
-	private static let _pathComponentAllowedCharacters: CharacterSet = {
-		var allowedCharacters = CharacterSet.urlPathAllowed
-		allowedCharacters.remove(charactersIn: "/")
-		return allowedCharacters
-	}()
+	static let catalogURL = URL(string: "https://sideloading.net/api/certificates/list/all")!
 
 	struct CatalogItem: Identifiable, Hashable {
 		let id: String
+		let certId: Int
 		let name: String
+		let folderName: String
 		let certificateType: String
 		let status: Status
 		let rawStatusText: String
@@ -27,7 +23,13 @@ enum NovaCerts {
 		fileprivate let order: Int
 
 		var subtitle: String {
-			var components = [certificateType]
+			var components: [String] = []
+			if !certificateType.isEmpty {
+				components.append(certificateType)
+			}
+			if !validFrom.isEmpty {
+				components.append(String.localized("Valid From: %@", arguments: validFrom))
+			}
 			if !validTo.isEmpty {
 				components.append(String.localized("Valid To: %@", arguments: validTo))
 			}
@@ -44,21 +46,37 @@ enum NovaCerts {
 		}
 
 		var p12URL: URL {
-			_assetURL(fileName: "\(name).p12")
+			_assetURL(fileName: "cert.p12")
 		}
 
 		var provisionURL: URL {
-			_assetURL(fileName: "\(name).mobileprovision")
+			_assetURL(fileName: "cert.mobileprovision")
 		}
 
 		var passwordURL: URL {
-			_assetURL(fileName: "password.txt")
+			_assetURL(fileName: "password")
 		}
 
 		private func _assetURL(fileName: String) -> URL {
-			let encodedFolder = NovaCerts._encodePathComponent(name)
-			let encodedFileName = NovaCerts._encodePathComponent(fileName)
-			return URL(string: "\(NovaCerts._rawBaseURL)/\(encodedFolder)/\(encodedFileName)")!
+			URL(string: "https://sideloading.net/api/certificates/download/\(certId)/\(fileName)")!
+		}
+	}
+
+	private struct CatalogResponseItem: Decodable {
+		let name: String
+		let status: String
+		let validFrom: String
+		let validTo: String
+		let folderName: String
+		let id: Int
+
+		private enum CodingKeys: String, CodingKey {
+			case name
+			case status
+			case validFrom = "valid_from"
+			case validTo = "valid_to"
+			case folderName = "folder_name"
+			case id
 		}
 	}
 
@@ -116,7 +134,8 @@ enum NovaCerts {
 
 	enum NovaCertsError: LocalizedError {
 		case invalidResponse(URL)
-		case invalidReadmeData
+		case invalidCatalogData
+		case invalidTextData(URL)
 		case emptyCatalog
 		case invalidPassword
 
@@ -124,8 +143,10 @@ enum NovaCerts {
 			switch self {
 			case .invalidResponse(let url):
 				String.localized("Failed to fetch %@.", arguments: url.absoluteString)
-			case .invalidReadmeData:
-				String.localized("The NovaCerts README could not be parsed.")
+			case .invalidCatalogData:
+				String.localized("The NovaCerts catalog could not be parsed.")
+			case .invalidTextData(let url):
+				String.localized("The text response from %@ could not be parsed.", arguments: url.absoluteString)
 			case .emptyCatalog:
 				String.localized("NovaCerts did not return any certificates.")
 			case .invalidPassword:
@@ -138,68 +159,34 @@ enum NovaCerts {
 // MARK: - Catalog
 extension NovaCerts {
 	static func fetchCatalog() async throws -> [CatalogSection] {
-		let markdown = try await _downloadText(from: readmeURL)
-		let entries = _parseCatalog(from: markdown)
+		let data = try await _downloadData(from: catalogURL)
+		let responseItems: [CatalogResponseItem]
+		do {
+			responseItems = try JSONDecoder().decode([CatalogResponseItem].self, from: data)
+		} catch {
+			throw NovaCertsError.invalidCatalogData
+		}
+
+		let entries = responseItems.enumerated().map { index, item in
+			CatalogItem(
+				id: String(item.id),
+				certId: item.id,
+				name: item.name,
+				folderName: item.folderName,
+				certificateType: item.folderName == item.name ? "" : item.folderName,
+				status: Status(markdownValue: item.status),
+				rawStatusText: item.status,
+				validFrom: item.validFrom,
+				validTo: item.validTo,
+				order: index
+			)
+		}
 
 		guard !entries.isEmpty else {
 			throw NovaCertsError.emptyCatalog
 		}
 
 		return _buildSections(from: entries)
-	}
-
-	private static func _parseCatalog(from markdown: String) -> [CatalogItem] {
-		let lines = markdown.components(separatedBy: .newlines)
-		var entries: [CatalogItem] = []
-
-		for line in lines {
-			let trimmedLine = line.trimmingCharacters(in: .whitespacesAndNewlines)
-			guard trimmedLine.hasPrefix("|"), trimmedLine.hasSuffix("|") else {
-				continue
-			}
-
-			if trimmedLine.contains("| Company | Type | Status | Valid From | Valid To | Download |") || trimmedLine.contains("|:--------|") {
-				continue
-			}
-
-			let rawColumns = trimmedLine
-				.split(separator: "|", omittingEmptySubsequences: false)
-				.map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
-
-			guard rawColumns.count >= 8 else {
-				continue
-			}
-
-			let columns = Array(rawColumns.dropFirst().dropLast())
-			guard columns.count >= 6 else {
-				continue
-			}
-
-			let company = columns[0]
-			let type = columns[1]
-			let statusText = columns[2]
-			let validFrom = columns[3]
-			let validTo = columns[4]
-
-			guard !company.isEmpty else {
-				continue
-			}
-
-			entries.append(
-				CatalogItem(
-					id: "\(entries.count)-\(company)",
-					name: company,
-					certificateType: type,
-					status: Status(markdownValue: statusText),
-					rawStatusText: statusText,
-					validFrom: validFrom,
-					validTo: validTo,
-					order: entries.count
-				)
-			)
-		}
-
-		return entries
 	}
 
 	private static func _buildSections(from entries: [CatalogItem]) -> [CatalogSection] {
@@ -320,16 +307,9 @@ extension NovaCerts {
 	private static func _downloadText(from url: URL) async throws -> String {
 		let data = try await _downloadData(from: url)
 		guard let text = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii) else {
-			throw NovaCertsError.invalidReadmeData
+			throw NovaCertsError.invalidTextData(url)
 		}
 
 		return text
-	}
-}
-
-// MARK: - Helpers
-extension NovaCerts {
-	private static func _encodePathComponent(_ value: String) -> String {
-		value.addingPercentEncoding(withAllowedCharacters: _pathComponentAllowedCharacters) ?? value
 	}
 }

@@ -25,18 +25,17 @@ struct OfficialCertificatesView: View {
 	// MARK: Body
 	var body: some View {
 		NBNavigationView(.localized("Official Certificates"), displayMode: .inline) {
-				_content
-			}
-			.searchable(text: $_searchText, placement: .platform())
-			.animation(.default, value: _filteredCatalogSections.count)
-			.animation(.default, value: _isLoading)
-			.toolbar {
-				_toolbarContent
-			}
-			.task {
-				guard !_hasLoaded else { return }
-				await _loadCatalog()
-			}
+			_content
+		}
+		.searchable(text: $_searchText, placement: .platform())
+		.animation(.default, value: _filteredCatalogSections.count)
+		.animation(.default, value: _isLoading)
+		.toolbar {
+			_toolbarContent
+		}
+		.task {
+			guard !_hasLoaded else { return }
+			await _loadCatalog()
 		}
 	}
 

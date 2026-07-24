@@ -25,47 +25,56 @@ struct OfficialCertificatesView: View {
 	// MARK: Body
 	var body: some View {
 		NBNavigationView(.localized("Official Certificates"), displayMode: .inline) {
-			Group {
-				if _isLoading || !_hasLoaded {
-					_loadingView
-				} else if let errorMessage = _errorMessage {
-					_errorView(message: errorMessage)
-				} else {
-					_catalogList
-				}
+				_content
 			}
 			.searchable(text: $_searchText, placement: .platform())
-			.animation(.default, value: _catalogSections.map(\.id))
+			.animation(.default, value: _filteredCatalogSections.count)
 			.animation(.default, value: _isLoading)
 			.toolbar {
-				NBToolbarButton(role: .cancel)
-
-				Menu {
-					ForEach(CertificateFilter.allCases, id: \.self) { filter in
-						Button {
-							_selectedFilter = filter
-						} label: {
-							HStack {
-								Text(filter.title)
-								if filter == _selectedFilter {
-									Image(systemName: "checkmark")
-								}
-							}
-						}
-					}
-				} label: {
-					Image(systemName: "line.3.horizontal.decrease.circle")
-				}
-
-				if _isImporting {
-					ToolbarItem(placement: .confirmationAction) {
-						ProgressView()
-					}
-				}
+				_toolbarContent
 			}
 			.task {
 				guard !_hasLoaded else { return }
 				await _loadCatalog()
+			}
+		}
+	}
+
+	@ViewBuilder
+	private var _content: some View {
+		if _isLoading || !_hasLoaded {
+			_loadingView
+		} else if let errorMessage = _errorMessage {
+			_errorView(message: errorMessage)
+		} else {
+			_catalogList
+		}
+	}
+
+	@ToolbarContentBuilder
+	private var _toolbarContent: some ToolbarContent {
+		NBToolbarButton(role: .cancel)
+
+		Menu {
+			ForEach(CertificateFilter.allCases, id: \.self) { filter in
+				Button {
+					_selectedFilter = filter
+				} label: {
+					HStack {
+						Text(filter.title)
+						if filter == _selectedFilter {
+							Image(systemName: "checkmark")
+						}
+					}
+				}
+			}
+		} label: {
+			Image(systemName: "line.3.horizontal.decrease.circle")
+		}
+
+		if _isImporting {
+			ToolbarItem(placement: .confirmationAction) {
+				ProgressView()
 			}
 		}
 	}

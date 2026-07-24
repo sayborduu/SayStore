@@ -121,7 +121,7 @@ enum NovaCerts {
 			case .revoked:
 				String.localized("Revoked")
 			case .expired:
-				String.localized("EXPIRED")
+				String.localized("Expired")
 			case .unknown:
 				String.localized("Unknown")
 			}

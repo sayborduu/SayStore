@@ -77,17 +77,17 @@ extension CertificatesCellView {
 
 		pills.append(
 			NBPillItem(
-				title: "\(String.localized("Apple Status")): \(appleTitle)",
-				icon: appleStatus.icon,
-				color: appleStatus.color
+				title: "\(String.localized("Device")): \(deviceTitle)",
+				icon: deviceStatus.icon,
+				color: deviceStatus.color
 			)
 		)
 
 		pills.append(
 			NBPillItem(
-				title: "\(String.localized("Device Status")): \(deviceTitle)",
-				icon: deviceStatus.icon,
-				color: deviceStatus.color
+				title: "\(String.localized("Apple Status")): \(appleTitle)",
+				icon: appleStatus.icon,
+				color: appleStatus.color
 			)
 		)
 

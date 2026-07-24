@@ -27,9 +27,9 @@ enum NovaCerts {
 			if !certificateType.isEmpty {
 				components.append(certificateType)
 			}
-			if !validFrom.isEmpty {
+			/*if !validFrom.isEmpty {
 				components.append(String.localized("Valid From: %@", arguments: validFrom))
-			}
+			}*/
 			if !validTo.isEmpty {
 				components.append(String.localized("Valid To: %@", arguments: validTo))
 			}
@@ -237,7 +237,7 @@ extension NovaCerts {
 				sections.append(
 					CatalogSection(
 						id: "group-\(baseName)",
-						title: String.localized("%@ - %lld Versions", arguments: baseName, Int64(sortedBucket.count)),
+						title: baseName,
 						subtitle: String.localized("%lld versions available", arguments: Int64(sortedBucket.count)),
 						status: Status.aggregate(sortedBucket.map(\.status)),
 						certificates: sortedBucket

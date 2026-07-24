@@ -27,7 +27,6 @@ struct OfficialCertificatesView: View {
 		NBNavigationView(.localized("Official Certificates"), displayMode: .inline) {
 			_content
 		}
-		.searchable(text: $_searchText, placement: .platform())
 		.animation(.default, value: _filteredCatalogSections.count)
 		.animation(.default, value: _isLoading)
 		.toolbar {

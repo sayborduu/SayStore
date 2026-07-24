@@ -1,11 +1,11 @@
-NAME := NexStore
+NAME := SayStore
 PLATFORM := iphoneos
-SCHEMES := NexStore
+SCHEMES := SayStore
 TMP := $(TMPDIR)/$(NAME)
 STAGE := $(TMP)/stage
 APP := $(TMP)/Build/Products/Release-$(PLATFORM)
 CERT_JSON_URL := https://backloop.dev/pack.json
-WORKSPACE := NexStore.xcworkspace
+WORKSPACE := SayStore.xcworkspace
 SOURCE_PACKAGES := $(TMP)/SourcePackages
 OPENSSL_XCFRAMEWORK := $(SOURCE_PACKAGES)/artifacts/openssl-package/OpenSSL/OpenSSL.xcframework
 

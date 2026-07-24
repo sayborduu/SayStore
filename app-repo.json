@@ -1,15 +1,15 @@
 {
-  "name": "NexStore Repository",
-  "identifier": "com.novadev.nexstore-repo",
-  "iconURL": "https://raw.githubusercontent.com/NovaDev404/NexStore/main/NexStore/Resources/Icons/Main/Icon@3x.png",
-  "website": "https://github.com/NovaDev404/NexStore",
+  "name": "SayStore Repository",
+  "identifier": "dev.alexbadi.SayStore-repo",
+  "iconURL": "https://raw.githubusercontent.com/sayborduu/SayStore/main/SayStore/Resources/Icons/Main/Icon@3x.png",
+  "website": "https://github.com/sayborduu/SayStore",
   "apps": [
     {
-      "name": "NexStore",
-      "bundleIdentifier": "com.novadev.nexstore",
-      "developerName": "NovaDev",
-      "iconURL": "https://raw.githubusercontent.com/NovaDev404/NexStore/main/NexStore/Resources/Icons/Main/Icon@3x.png",
-      "localizedDescription": "NexStore - The best sideloading app for iOS!",
+      "name": "SayStore",
+      "bundleIdentifier": "dev.alexbadi.SayStore",
+      "developerName": "Alex Badi",
+      "iconURL": "https://raw.githubusercontent.com/sayborduu/SayStore/main/SayStore/Resources/Icons/Main/Icon@3x.png",
+      "localizedDescription": "SayStore - The best sideloading app for iOS!",
       "subtitle": "On-device sideloading application",
       "tintColor": "1E4ED8",
       "versions": [
@@ -17,38 +17,38 @@
           "version": "1.1.0",
           "date": "2026-03-07T23:27:55Z",
           "size": 14126940,
-          "downloadURL": "https://github.com/NovaDev404/NexStore/releases/download/v1.1.0/NexStore.ipa"
+          "downloadURL": "https://github.com/sayborduu/SayStore/releases/download/v1.1.0/SayStore.ipa"
         }
       ],
       "appPermissions": {},
       "screenshotURLs": [
-        "https://raw.githubusercontent.com/NovaDev404/NexStore/main/NexStore/Resources/Screenshots/Screen1.png",
-        "https://raw.githubusercontent.com/NovaDev404/NexStore/main/NexStore/Resources/Screenshots/Screen2.png",
-        "https://raw.githubusercontent.com/NovaDev404/NexStore/main/NexStore/Resources/Screenshots/Screen3.png",
-        "https://raw.githubusercontent.com/NovaDev404/NexStore/main/NexStore/Resources/Screenshots/Screen4.png"
+        "https://raw.githubusercontent.com/sayborduu/SayStore/main/SayStore/Resources/Screenshots/Screen1.png",
+        "https://raw.githubusercontent.com/sayborduu/SayStore/main/SayStore/Resources/Screenshots/Screen2.png",
+        "https://raw.githubusercontent.com/sayborduu/SayStore/main/SayStore/Resources/Screenshots/Screen3.png",
+        "https://raw.githubusercontent.com/sayborduu/SayStore/main/SayStore/Resources/Screenshots/Screen4.png"
       ],
       "version": "1.1.0",
       "versionDate": "2026-03-07T23:27:55Z",
       "size": 14126940,
-      "downloadURL": "https://github.com/NovaDev404/NexStore/releases/download/v1.1.0/NexStore.ipa"
+      "downloadURL": "https://github.com/sayborduu/SayStore/releases/download/v1.1.0/SayStore.ipa"
     }
   ],
   "news": [
     {
       "title": "Donate",
-      "identifier": "nexstore-donate",
-      "caption": "NexStore is a free project and relies on community support! Donations help keep development going and bring new updates.",
+      "identifier": "SayStore-donate",
+      "caption": "SayStore is a free project and relies on community support! Donations help keep development going and bring new updates.",
       "tintColor": "1E4ED8",
       "date": "2026-03-01",
-      "url": "https://tinyurl.com/sponsor-nexstore",
+      "url": "https://tinyurl.com/sponsor-SayStore",
       "notify": false
     },
     {
-      "title": "About NexStore",
-      "identifier": "nexstore-about",
-      "caption": "NexStore allows users to sideload apps on iOS devices without a computer. It’s fully managed on-device and provides easy app management.",
+      "title": "About SayStore",
+      "identifier": "SayStore-about",
+      "caption": "SayStore allows users to sideload apps on iOS devices without a computer. It’s fully managed on-device and provides easy app management.",
       "tintColor": "1E4ED8",
-      "url": "https://github.com/NovaDev404/NexStore",
+      "url": "https://github.com/sayborduu/SayStore",
       "date": "2026-03-01",
       "notify": true
     }

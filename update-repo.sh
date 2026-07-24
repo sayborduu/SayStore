@@ -9,7 +9,7 @@ handle_error() {
   exit 1
 }
 
-REPO="NovaDev404/NexStore"
+REPO="sayborduu/SayStore"
 API_URL="https://api.github.com/repos/$REPO/releases/latest"
 JSON_FILE="app-repo.json"
 
@@ -26,7 +26,7 @@ while [ "$attempt" -le "$max_attempts" ]; do
   # fetch raw body (headers suppressed). Include User-Agent and Accept headers.
   release_info_raw=$(curl -sS \
     -H "Accept: application/vnd.github+json" \
-    -H "User-Agent: NexStore-Repo-Updater" \
+    -H "User-Agent: SayStore-Repo-Updater" \
     -H "Authorization: token $GITHUB_TOKEN" \
     "$API_URL" 2>/dev/null || true)
 

@@ -46,6 +46,16 @@ struct SayStoreApp: App {
 				
 				UIApplication.topViewController()?.view.window?.tintColor = UIColor(Color(hex: UserDefaults.standard.string(forKey: "SayStore.userTintColor") ?? "#1E4ED8"))
 			}
+			.task {
+				let granted = await NotificationManager.shared.requestAuthorization()
+				if granted {
+					let context = Storage.shared.context
+					let fetch: NSFetchRequest<CertificatePair> = CertificatePair.fetchRequest()
+					if let certs = try? context.fetch(fetch) {
+						NotificationManager.shared.rescheduleAll(for: certs)
+					}
+				}
+			}
 		}
 	}
 	

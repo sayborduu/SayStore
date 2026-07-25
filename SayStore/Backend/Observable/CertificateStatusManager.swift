@@ -211,6 +211,12 @@ final class CertificateStatusManager: ObservableObject {
 
 				appleStatusSnapshots[uuid] = snapshot
 				_persistAppleStatuses()
+
+				if snapshot.status == .revoked {
+					NotificationManager.shared.scheduleRevokedNotification(for: cert)
+				} else {
+					NotificationManager.shared.scheduleExpiryNotification(for: cert)
+				}
 			} catch {
 				return
 			}
@@ -225,9 +231,14 @@ final class CertificateStatusManager: ObservableObject {
 		if !refreshingDeviceStatusIDs.contains(uuid) {
 			refreshingDeviceStatusIDs.insert(uuid)
 
-			Storage.shared.revokagedCertificate(for: cert) { _ in
+			Storage.shared.revokagedCertificate(for: cert) { isRevoked in
 				Task { @MainActor in
 					self.refreshingDeviceStatusIDs.remove(uuid)
+					if isRevoked == true {
+						NotificationManager.shared.scheduleRevokedNotification(for: cert)
+					} else {
+						NotificationManager.shared.scheduleExpiryNotification(for: cert)
+					}
 				}
 			}
 		}

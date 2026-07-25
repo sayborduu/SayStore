@@ -12,6 +12,10 @@ extension FileManager {
 	var archives: URL {
 		URL.documentsDirectory.appendingPathComponent("Archives")
 	}
+
+	var backups: URL {
+		URL.documentsDirectory.appendingPathComponent("Backups")
+	}
 	
 	/// Gives apps Signed directory
 	var signed: URL {

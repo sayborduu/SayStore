@@ -187,7 +187,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 			fileManager.archives,
 			fileManager.certificates,
 			fileManager.signed,
-			fileManager.unsigned
+			fileManager.unsigned,
+			fileManager.backups
 		]
 		
 		for url in directories {

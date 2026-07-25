@@ -75,6 +75,9 @@ struct SettingsView: View {
                     NavigationLink(destination: InstallationView()) {
                         Label(.localized("Installation"), systemImage: "arrow.down.circle")
                     }
+                    NavigationLink(destination: BackupView()) {
+                        Label(.localized("Backup"), systemImage: "internaldrive")
+                    }
                     NavigationLink(destination: MoreView()) {
                         Label(.localized("More Settings"), systemImage: "ellipsis.circle")
                     }
